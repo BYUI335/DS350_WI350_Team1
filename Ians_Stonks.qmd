@@ -4,7 +4,7 @@ format: dashboard
 editor: visual
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
 library(flexdashboard)
 library(ggplot2)
 library(tidyquant)
@@ -14,12 +14,7 @@ library(tidyr)
 ```
 
 
-## Stonks
-
-![](Pic_of_Ian.jpg){width="160"}
-
-
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(tidyquant)
 library(dplyr)
@@ -59,11 +54,7 @@ ggplot(stock_data, aes(x = date, y = normalized_price, color = symbol, group = s
   )
 ```
 
-
-
-# Stonks
-
-```{r}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 stock_returns <- stock_data %>%
@@ -99,9 +90,6 @@ ggplot(stock_returns, aes(x = reorder(symbol,total_return ), y = total_return, f
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor.y = element_blank()
-  )+
+  ) +
   scale_fill_manual(values = stock_colors)
 ```
-
-
-

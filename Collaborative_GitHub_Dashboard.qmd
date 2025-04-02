@@ -2,8 +2,6 @@
 title: "Collaborative_GitHub_Dashboard"
 format: dashboard
 ---
-<<<<<<< HEAD
-=======
 
 ```{r}
 #| message: false
@@ -16,19 +14,16 @@ library(ggplot2)
 library(tidyr)
 ```
 
+## Profiles {.tabset}
 
+![](IMG_5170.jpg)
 
+![](Pic_of_Ian.jpg)
+
+## Ian {.flow}
 
 {{< include "Ians_Stonks.qmd" >}}
 
+## Tristan {.flow} 
 
-
-
-
-
-
-
-
-
-
->>>>>>> 85caebdc83b3d68efb36b87f4b027548300bb9c7
+{{< include "tristan.qmd" >}}
