@@ -2,3 +2,33 @@
 title: "Collaborative_GitHub_Dashboard"
 format: dashboard
 ---
+<<<<<<< HEAD
+=======
+
+```{r}
+#| message: false
+#| warning: false
+library(flexdashboard)
+library(ggplot2)
+library(tidyquant)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+
+
+
+{{< include "Ians_Stonks.qmd" >}}
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 85caebdc83b3d68efb36b87f4b027548300bb9c7
