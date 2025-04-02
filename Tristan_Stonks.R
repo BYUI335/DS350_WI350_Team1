@@ -1,0 +1,40 @@
+##
+
+library(tidyquant)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+
+
+my_stock_choices = c("CL", "PG", "AXP")
+my_stocks <- tq_get(my_stock_choices, from = "2024-10-01", to  = "2025-02-17")
+
+
+my_initial_stocks <- my_stocks %>%
+  filter(date == "2024-10-01") %>%
+  mutate(initial_stock = (1000 / 3) / adjusted) %>%
+  select(symbol, initial_stock)
+
+
+my_stocks_clean <- my_stocks %>%
+  left_join(my_initial_stocks, by = "symbol") %>%
+  mutate(price = initial_stock * adjusted,
+         price_change = price - (1000 / 3),
+         data = "My Stocks") %>%
+  select(symbol, date, adjusted, initial_stock, price, price_change, data) %>%
+  group_by(symbol, data)
+
+plot_1 <- ggplot(my_stocks_clean, aes(x = date, y = price_change, color = symbol)) +
+  geom_line() +
+  labs(title = "What Stocks Perform Better Overall? (2024 - 2025)",
+       x = NULL,
+       y = "Portfolio Price Change (USD)",
+       subtitle = "Stocks are Colgate-Palmolive Company (CL), Procter & Gamble Company (PG), and American Express Company (AXP).",
+       color = NULL) +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(size = 8, color = "grey45"),
+        panel.grid = element_blank()) +
+  geom_hline(yintercept = 0, color = "grey85")
+
+plot_1

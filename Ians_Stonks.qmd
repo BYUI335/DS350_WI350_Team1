@@ -1,0 +1,100 @@
+---
+title: "Ians_part"
+format: dashboard
+editor: visual
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(tidyquant)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+## Stonks
+
+![](Pic_of_Ian.jpg){width="160"}
+
+```{r}
+library(ggplot2)
+library(tidyquant)
+library(dplyr)
+
+
+stocks <- c("AAPL", "MSFT", "DJT", "TSLA", "AMZN", "GOOG")
+
+
+start_date <- "2024-01-01"
+end_date <- "2024-12-31"
+
+
+stock_data <- tq_get(stocks, from = start_date, to = end_date, get = "stock.prices") %>%
+  select(symbol, date, adjusted)
+
+
+stock_data <- stock_data %>%
+  group_by(symbol) %>%
+  mutate(normalized_price = adjusted / first(adjusted) * 100) %>%
+  ungroup()
+
+
+stock_data$symbol <- as.factor(stock_data$symbol)
+
+
+ggplot(stock_data, aes(x = date, y = normalized_price, color = symbol, group = symbol)) +
+  geom_line(size = 1.2) +
+  labs(title = "Stock Price Growth Over Time",
+       x = "Date",
+       y = "Normalized Price (Starting at 100)",
+       color = "Stock Symbol") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),  
+    panel.grid.minor = element_blank(),  
+    panel.grid.major.y = element_line(linetype = "dashed", color = "gray80")
+  )
+```
+
+# Stonks
+
+```{r}
+
+
+stock_returns <- stock_data %>%
+  group_by(symbol) %>%
+  summarise(
+    start_price = first(adjusted),
+    end_price = last(adjusted),
+    total_return = (end_price - start_price) / start_price
+  )
+
+stock_colors <- c(
+  "DJT" = "darkgoldenrod",  
+  "TSLA" = "firebrick",       
+  "AMZN" = "seagreen",       
+  "GOOG" = "darkorange",    
+  "AAPL" = "dodgerblue",    
+  "MSFT" = "navy"           
+)
+
+
+ggplot(stock_returns, aes(x = reorder(symbol,total_return ), y = total_return, fill = symbol)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(total_return, 3), "%")),  
+            hjust = ifelse(stock_returns$total_return > 0.9, 1.1, -0.1), 
+            color = ifelse(stock_returns$total_return > 0.9, "white", "black"),  
+            size = 4) +  
+  coord_flip() + 
+  labs(title = "Overall Contribution of Each Stock to Portfolio",
+       x = "Stock",
+       y = "Contribution to Portfolio Return (%)",
+       fill = "Participant") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank()
+  )+
+  scale_fill_manual(values = stock_colors)
+```
